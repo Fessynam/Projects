@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+//So using wrappers here.
+import "google/protobuf/wrappers.proto";
+
+message courseInformation {
+    int32 courseId = 1;
+    string courseName = 2; 
+    int32 assessorId =3;
+    repeated StudentsRegistered studentsRegistered =4;
+    repeated  Assignment assignment = 5;
+}
+
+message assignCourse {
+    int32 courseId = 1;
+    int32 assessorId = 2;
+}
+message Assignment {
+    int32 assignmentId =1;
+    int32 weight =2;
+    repeated Submissions submission = 3;
+}
+
+message Submissions {
+    int32 submissionId =1;
+    string studentNumber =2;
+    int32 studentMark = 3;
+}
+
+message Users {
+    int32 usersId =1;
+    string fullname =2;
+    string username = 3;
+    string password = 4;
+    string role = 5;
+}
+
+message courseCodesResponse {
+    string code = 1;
+}
+
+message StudentsRegistered {
+      int32 usersId = 1;
+      string courseName =2;
+
+}
+
+message requestsAssignments {
+    string courseName = 1;
+    int32 assignmentId = 2;
+    int32 assignmentMark = 3;
+}
+
+message loginRequest {
+    string fullname =1;
+    string password = 2;
+}
+
+
+service Assessments {
+
+    rpc create_courses( stream courseInformation ) returns ( stream courseCodesResponse );
+    rpc assign_courses( assignCourse ) returns ( google.protobuf.StringValue );
+    rpc create_users( stream Users ) returns ( google.protobuf.StringValue );
+    rpc submit_assignments( stream Assignment ) returns ( google.protobuf.StringValue );
+    rpc request_assignments( requestsAssignments ) returns ( stream Submissions );
+    rpc submit_marks( requestsAssignments ) returns ( google.protobuf.StringValue );
+    rpc register( stream StudentsRegistered ) returns ( google.protobuf.StringValue );
+    rpc login( loginRequest ) returns ( google.protobuf.StringValue );
+
+}
